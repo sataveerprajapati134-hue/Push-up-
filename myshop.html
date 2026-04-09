@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>My Shop</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body { margin:0; font-family: Arial; background:#f1f3f6; }
+
+    header {
+      background:#131921;
+      color:white;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:10px 20px;
+    }
+
+    .logo {
+      font-size:22px;
+      font-weight:bold;
+      color:#ff9900;
+    }
+
+    .nav button {
+      padding:6px 10px;
+      margin-left:5px;
+      border:none;
+      border-radius:5px;
+      cursor:pointer;
+    }
+
+    .login-btn { background:#ff9900; font-weight:bold; }
+    .cart-btn { background:#ff9900; font-weight:bold; }
+
+    .products {
+      display:grid;
+      grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
+      gap:20px;
+      padding:20px;
+    }
+
+    .card {
+      background:white;
+      padding:15px;
+      border-radius:10px;
+      box-shadow:0 3px 10px rgba(0,0,0,0.2);
+      text-align:center;
+    }
+
+    .card img {
+      width:100%;
+      height:150px;
+      object-fit:cover;
+      border-radius:5px;
+    }
+
+    .price { color:green; font-weight:bold; margin:8px 0; }
+
+    button.buy {
+      background:#ff9900;
+      padding:8px 12px;
+      border:none;
+      border-radius:5px;
+      cursor:pointer;
+      font-weight:bold;
+    }
+
+    #cartPanel {
+      position:fixed;
+      right:-350px;
+      top:0;
+      width:300px;
+      height:100%;
+      background:white;
+      box-shadow:-3px 0 10px rgba(0,0,0,0.3);
+      padding:15px;
+      transition:0.3s;
+      overflow-y:auto;
+    }
+
+    footer {
+      background:#131921;
+      color:white;
+      text-align:center;
+      padding:10px;
+    }
+
+    .modal {
+      position:fixed;
+      top:0; left:0;
+      width:100%; height:100%;
+      background:rgba(0,0,0,0.5);
+      display:none;
+      justify-content:center;
+      align-items:center;
+    }
+
+    .modal-content {
+      background:white;
+      padding:20px;
+      border-radius:10px;
+      width:300px;
+      text-align:center;
+    }
+
+    input {
+      width:90%;
+      padding:8px;
+      margin:5px 0;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">My Shop</div>
+  <div class="nav">
+    <button class="login-btn" onclick="openLogin()">Login</button>
+    <button class="cart-btn" onclick="toggleCart()">Cart (<span id="cartCount">0</span>)</button>
+  </div>
+</header>
+
+<div class="products">
+  <div class="card">
+    <img src="https://via.placeholder.com/300x200">
+    <h3>Premium Shoes</h3>
+    <div class="price">₹999</div>
+    <button class="buy" onclick="addToCart('Premium Shoes',999)">Add to Cart</button>
+  </div>
+
+  <div class="card">
+    <img src="https://via.placeholder.com/300x200">
+    <h3>Luxury Watch</h3>
+    <div class="price">₹1499</div>
+    <button class="buy" onclick="addToCart('Luxury Watch',1499)">Add to Cart</button>
+  </div>
+
+  <div class="card">
+    <img src="https://via.placeholder.com/300x200">
+    <h3>Gaming Headset</h3>
+    <div class="price">₹799</div>
+    <button class="buy" onclick="addToCart('Gaming Headset',799)">Add to Cart</button>
+  </div>
+</div>
+
+<div id="cartPanel">
+  <h3>Your Cart</h3>
+  <ul id="cartItems"></ul>
+  <h4>Total: ₹<span id="total">0</span></h4>
+  <button onclick="checkout()">Checkout</button>
+</div>
+
+<div class="modal" id="loginModal">
+  <div class="modal-content">
+    <h3>Login</h3>
+    <input type="text" id="username" placeholder="Enter Name">
+    <button onclick="login()">Login</button>
+  </div>
+</div>
+
+<footer>
+  © 2026 My Shop | All Rights Reserved
+</footer>
+
+<script>
+let cart = [];
+let total = 0;
+
+function addToCart(name, price){
+  cart.push({name, price});
+  total += price;
+  document.getElementById("cartCount").innerText = cart.length;
+  displayCart();
+}
+
+function displayCart(){
+  let list = document.getElementById("cartItems");
+  list.innerHTML="";
+  cart.forEach(item=>{
+    let li=document.createElement("li");
+    li.innerText=item.name+" - ₹"+item.price;
+    list.appendChild(li);
+  });
+  document.getElementById("total").innerText=total;
+}
+
+function toggleCart(){
+  let panel=document.getElementById("cartPanel");
+  panel.style.right = panel.style.right==="0px"?"-350px":"0px";
+}
+
+function checkout(){
+  if(cart.length===0){
+    alert("Cart is empty!");
+  } else {
+    alert("Order Placed Successfully (Demo)!");
+    cart=[];
+    total=0;
+    displayCart();
+    document.getElementById("cartCount").innerText=0;
+  }
+}
+
+function openLogin(){
+  document.getElementById("loginModal").style.display="flex";
+}
+
+function login(){
+  let name=document.getElementById("username").value;
+  if(name===""){
+    alert("Enter Name!");
+  } else {
+    localStorage.setItem("user",name);
+    alert("Welcome "+name);
+    document.getElementById("loginModal").style.display="none";
+  }
+}
+</script>
+
+</body>
+</html>
